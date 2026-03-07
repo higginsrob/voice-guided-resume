@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/jpeg" sizes="32x32" href="src/img/Rob.jpeg">
+  <title>Rob Higgins Resume</title>
+  
+  <!-- Tone.js library for audio effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/css/styles.css" />
+</head>
+<body>
+  <!-- Parallax background effects -->
+  <div class="parallax-bg">
+    <div class="parallax-shape shape-1"></div>
+    <div class="parallax-shape shape-2"></div>
+    <div class="parallax-shape shape-3"></div>
+    <div class="parallax-shape shape-4"></div>
+    <div class="parallax-shape shape-5"></div>
+    <div class="parallax-shape shape-6"></div>
+    <div class="parallax-shape shape-7"></div>
+    <div class="parallax-shape shape-8"></div>
+  </div>
+
+  <!-- Vignette overlay -->
+  <div class="vignette-layer"></div>
+
+  <!-- TTS Effects HUD -->
+  <div id="tts-hud" class="collapsed">
+    <div id="robot-container">
+      <div id="voice-image-container">
+        <img id="voice-image" src="src/img/Rob.jpeg" alt="Voice Avatar">
+      </div>
+      <svg
+         width="100%"
+         height="100%"
+         viewBox="0 0 24 24"
+         version="1.1"
+         id="robot-svg">
+        <g id="g2">
+          <path
+             fill="none"
+             d="M 0.08181818,2.0181818 H 24.081818 V 26.018182 H 0.08181818 Z"
+             id="path1" />
+          <path
+             d="m 13.081818,6.0731818 c 4.5,0.497 8,4.3120002 8,8.9450002 v 9 H 3.0818182 v -9 c 0,-4.633 3.5,-8.4480002 7.9999998,-8.9450002 v -1.315 h 2 z m -1,13.9450002 c 2.761426,0 4.999998,-2.238576 4.999998,-5 0,-2.761424 -2.238572,-5 -4.999998,-5 -6.6666636,0 -6.6666636,10 0,10 z"
+             id="path2"
+             style="fill:url(#linearGradient3);fill-opacity:1;stroke:none;stroke-width:0.99999;" />
+          <ellipse
+             style="fill:#4c4c4c;fill-opacity:1;stroke:#676767;stroke-width:0.920674;"
+             id="path3"
+             cx="12.163638"
+             cy="2.5690899"
+             rx="2.2177083"
+             ry="2.1086175" />
+          <ellipse
+             style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2.68704;stroke-opacity:0.3"
+             id="path4"
+             cx="12.109092"
+             cy="14.972728"
+             rx="7.035254"
+             ry="6.9534369" />
+        </g>
+        <defs>
+          <linearGradient id="linearGradient3" x1="12.08" y1="23.38" x2="12.08" y2="5.38" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4c4c4c" offset="0.5" />
+            <stop stop-color="#888888" offset="0.5" />
+            <stop stop-color="#323232" offset="1" />
+          </linearGradient>
+          <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="var(--accent-color, #7aa2f7)" stop-opacity="1" />
+            <stop offset="100%" stop-color="var(--accent-color, #7aa2f7)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div id="hud-header">
+      <div id="hud-header-top">
+        <select id="hud-voice-select" onclick="event.stopPropagation();"></select>
+        <span id="hud-toggle-indicator">▶</span>
+      </div>
+    </div>
+    <div id="hud-controls">
+      <!-- Server connection status -->
+      <div id="server-status" style="font-size: 0.7rem; margin-bottom: 8px; padding: 6px; background: rgba(122, 162, 247, 0.1); border-radius: 4px; border-left: 2px solid var(--accent-color); display: flex; justify-content: space-between; align-items: center;">
+        <span id="server-status-text">🔍 Checking for TTS server...</span>
+        <button id="server-config-btn" style="background: none; border: 1px solid var(--border-color); color: var(--subtle-color); padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 0.65rem;">⚙️</button>
+      </div>
+
+      <!-- Server config panel (hidden by default) -->
+      <div id="server-config-panel" style="display: none; margin-bottom: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid var(--border-color);">
+        <div style="font-size: 0.7rem; color: var(--subtle-color); margin-bottom: 6px;">TTS Server URL:</div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <input type="text" id="server-url-input" value="http://localhost:8000/v1/"
+            style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-color); padding: 4px 8px; border-radius: 3px; font-size: 0.75rem;" />
+          <button id="server-connect-btn" style="background: rgba(122, 162, 247, 0.2); border: 1px solid var(--border-color); color: var(--text-color); padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 0.7rem;">Connect</button>
+        </div>
+        <div style="font-size: 0.65rem; color: var(--subtle-color); margin-top: 4px;">Leave empty to use browser's built-in TTS (no effects)</div>
+        
+        <!-- Voice upload section (shown when server has no voices) -->
+        <div id="voice-upload-section" style="display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-color);">
+          <div style="font-size: 0.7rem; color: #ff9800; margin-bottom: 6px;">⚠️ No voices on server. Upload a voice sample:</div>
+          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="voice-name-input" placeholder="Voice name (e.g., 'rob')"
+              style="flex: 1; min-width: 100px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-color); padding: 4px 8px; border-radius: 3px; font-size: 0.7rem;" />
+            <input type="file" id="voice-file-input" accept="audio/*"
+              style="flex: 2; min-width: 150px; font-size: 0.65rem; color: var(--subtle-color);" />
+            <button id="voice-upload-btn" style="background: rgba(76, 175, 80, 0.2); border: 1px solid var(--border-color); color: var(--text-color); padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 0.65rem;">Upload</button>
+          </div>
+        </div>
+      </div>
+      
+
+      <div id="pedalboard">
+        <!-- Pedals will be generated dynamically - guitar pedal board layout -->
+        <div id="pedal-row"></div>
+      </div>
+      <button id="reset-effects-btn" title="Reset All Effects">Reset</button>
+    </div>
+  </div>
+
+  <!-- TTS toggle button -->
+  <button id="tts-toggle" title="Speak Resume" style="display: none">
+    🔊
+  </button>
+
+  <!-- Resume Content -->
+  <div class="resume">
+    <div id="resume-container"></div>
+  </div>
+
+  <footer style="text-align:center; margin-top:2rem; font-size:0.9rem; color: var(--subtle-color);">
+    This web page was built by claude, gemini, qwen, openai, chatterbox and local models (qwen3.5 and gpt-oss),
+  <div>with help from <span style="color: white; font-weight: bold">Rob Higgins</span></div>
+  </footer>
+
+  <!-- Main application script (module) -->
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

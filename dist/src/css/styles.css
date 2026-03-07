@@ -1,0 +1,668 @@
+/* Resume & TTS Effects Styles */
+
+:root {
+  --bg-color: #1a1b26;
+  --text-color: #e0e0e0;
+  --accent-color: #7aa2f7;
+  --subtle-color: #9aa5ce;
+  --border-color: #2f3647;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  line-height: 1.6;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  position: relative;
+  text-shadow: 0 0 7px black;
+}
+
+h1, h2, h3, li, p {
+}
+
+/* Parallax background effects */
+.parallax-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.parallax-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.25;
+  will-change: transform;
+}
+
+/* Highlight currently spoken line */
+.speaking {
+  color: #eebb77 !important;
+}
+
+/* TTS button hover effect */
+#tts-toggle:hover {
+  opacity: 0.8;
+}
+
+/* Vignette layer – darkens corners, ignores pointer events */
+.vignette-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+/* HUD for TTS Effects */
+#tts-hud {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  min-width: 320px;
+  max-width: 520px;
+  max-height: 95%;
+  background: rgba(26, 27, 38, 0.95);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-color) var(--border-color);
+}
+
+#tts-hud.collapsed {
+  height: 48px;
+}
+
+/* Robot container - positioned to stick out at top-left of HUD */
+#robot-container {
+  position: absolute;
+  top: -140px;
+  left: 10px;
+  width: 140px;
+  height: 140px;
+  z-index: 2003;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+#robot-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.5;
+}
+
+/* Voice image container - positioned behind the robot's main LED hole */
+#voice-image-container {
+  position: absolute;
+  top: 33%; /* Centers roughly on path4 in 24x24 viewBox */
+  left: 21%;
+  width: 58%;
+  height: 58%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  z-index: 2002;
+}
+
+#voice-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  z-index: 2003;
+}
+
+#hud-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-color);
+}
+
+#hud-toggle-indicator {
+  font-size: 0.8rem;
+  color: var(--subtle-color);
+}
+
+#hud-controls {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 2003;
+}
+
+#reset-effects-btn {
+  background: rgba(26, 27, 38, 0.95);
+  appearance: none;
+  border-radius: 4px;
+  border: none;
+  color: white;
+}
+
+#tts-hud.collapsed #hud-controls {
+  display: none;
+}
+
+/* Voice selector in HUD - full width at top of controls */
+#hud-voice-select {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 4px;
+  color: var(--text-color);
+  font-size: 0.8rem;
+  outline: none;
+  margin-bottom: 8px;
+  flex-grow: 1;
+}
+
+#hud-voice-select option {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-color);
+}
+
+#hud-voice-select:focus {
+  border-color: var(--accent-color);
+}
+
+#hud-header-top {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Pedal Board UI */
+#pedalboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px;
+}
+
+#pedal-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 4px;
+  overflow-x: auto;
+  height: 180px;
+}
+
+.pedal {
+  position: relative;
+  width: 72px;
+  height: 160px;
+  background: linear-gradient(145deg, #2a2b3a, #1a1b26);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px 50px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.pedal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.pedal-knob-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  justify-items: center;
+  align-items: center;
+  margin-bottom: 6px;
+  width: 100%;
+  padding: 4px 2px;
+}
+
+.knob-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.knob-container.large {
+  grid-column: span 2;
+  margin-bottom: 4px;
+}
+
+.knob-dial {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(145deg, #3a3b4a, #2a2b3a);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  cursor: ns-resize;
+  transform: rotate(180deg);
+}
+
+.knob-dial.large {
+  width: 36px;
+  height: 36px;
+  border-width: 3px;
+}
+
+.knob-pointer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5px;
+  height: 7px;
+  background: var(--accent-color);
+  transform-origin: center top;
+  transform: translate(-50%, 0) rotate(-135deg);
+  border-radius: 1px;
+}
+
+.knob-dial.large .knob-pointer {
+  height: 14px;
+  width: 2.5px;
+}
+
+.knob-label {
+  font-size: 0.45rem;
+  color: var(--subtle-color);
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+  max-width: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.knob-container.large .knob-label {
+  font-size: 0.55rem;
+  max-width: none;
+}
+
+.pedal-footswitch-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 42px;
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+}
+
+.pedal-footswitch {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(145deg, #3a3b4a, #2a2b3a);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+}
+
+.pedal-footswitch:active {
+  transform: scale(0.95);
+}
+
+.pedal-footswitch.active {
+  background: linear-gradient(145deg, #4a4b5a, #3a3b4a);
+  border-color: var(--accent-color);
+}
+
+.pedal-led {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1a1b26;
+  border: 1px solid var(--border-color);
+  z-index: 1;
+}
+
+.pedal-led.active {
+  box-shadow: 0 0 8px currentColor;
+}
+
+.pedal-led.distortion.active {
+  background: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.pedal-led.reverb.active {
+  background: #4ecdc4;
+  color: #4ecdc4;
+}
+
+.pedal-led.chorus.active {
+  background: #ffe66d;
+  color: #ffe66d;
+}
+
+.pedal-led.phaser.active {
+  background: #ff9ff3;
+  color: #ff9ff3;
+}
+
+.pedal-label {
+  font-size: 0.5rem;
+  color: var(--text-color);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  font-weight: 600;
+  padding: 2px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Effects chain slots */
+#effects-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.effect-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  cursor: grab;
+}
+
+.effect-slot:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.effect-slot.dragging {
+  opacity: 0.5;
+  border: 1px dashed var(--accent-color);
+}
+
+.effect-slot.drag-over {
+  border: 1px dashed var(--accent-color);
+  background: rgba(122, 162, 247, 0.1);
+}
+
+.drag-handle {
+  color: var(--subtle-color);
+  cursor: grab;
+  font-size: 1.1rem;
+}
+
+.effect-name {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  flex: 1;
+}
+
+.effect-toggle {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent-color);
+}
+
+/* Drag handle */
+.drag-handle {
+  cursor: grab;
+  color: var(--subtle-color);
+  user-select: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 6px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.effect-slot.dragging {
+  opacity: 0.5;
+  border: 1px solid var(--accent-color);
+}
+
+/* Effect parameters */
+.effect-params {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  margin: 8px 0 8px 28px;
+}
+
+.effect-params.hidden {
+  display: none;
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+}
+
+.param-label {
+  color: var(--subtle-color);
+  width: 50px;
+  font-size: 0.7rem;
+}
+
+.param-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+}
+
+.param-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Preset controls */
+#preset-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+}
+
+.preset-btn {
+  flex: 1;
+  padding: 6px 10px;
+  background: rgba(122, 162, 247, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-color);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.preset-btn:hover {
+  background: rgba(122, 162, 247, 0.2);
+}
+
+#preset-select-container {
+  position: absolute;
+  bottom: 55px;
+  left: 20px;
+  z-index: 2001;
+}
+
+#preset-select {
+  background: rgba(26, 27, 38, 0.95);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  min-width: 160px;
+  outline: none;
+}
+
+#preset-select option {
+  background: rgba(26, 27, 38, 0.95);
+  color: var(--text-color);
+}
+
+/* Parallax shapes */
+.shape-1 {
+  top: 15%;
+  left: -20%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, #7aa2f7, transparent 70%);
+}
+
+.shape-2 {
+  bottom: 15%;
+  left: 5%;
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, #bb9af7, transparent 70%);
+}
+
+.shape-3 {
+  top: 50%;
+  left: -10%;
+  width: 25vw;
+  height: 25vw;
+  background: radial-gradient(circle, #c0caf5, transparent 70%);
+}
+
+/* Resume content styles */
+h1, h2, h3 {
+  color: var(--accent-color);
+  margin-top: 1.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.8rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--subtle-color);
+  margin-top: 2.5rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-top: 1.5rem;
+}
+
+ul {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+  padding-left: 0.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-style: italic;
+  color: var(--subtle-color);
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.section {
+  margin-top: 2.5rem;
+}
+
+.section:first-child {
+  margin-top: 0;
+}
+
+a {
+  color: var(--accent-color);
+}
+
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--subtle-color);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 1.5rem 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+}

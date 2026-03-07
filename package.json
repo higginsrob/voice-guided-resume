@@ -1,0 +1,21 @@
+{
+  "name": "/workspace",
+  "private": true,
+  "scripts": {
+    "build:all": "npm run build:app && npm run build:tts",
+    "build:app": "./bin/build.app.mjs",
+    "build:ci": "npm run build:app",
+    "build:tts": "./bin/build.tts.mjs",
+    "dev": "cd dist && npx http-server .",
+    "test": "npm run test:app && npm run test:tts",
+    "test:app": "./bin/build.app.test.mjs",
+    "test:ci": "npm run test:app",
+    "test:tts": "./bin/build.tts.test.mjs"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
