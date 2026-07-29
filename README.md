@@ -4,6 +4,8 @@ An interactive personal resume that narrates itself. Click any line (or press sp
 
 **Live demo:** [higginsrob.github.io/voice-guided-resume](https://higginsrob.github.io/voice-guided-resume/)
 
+![Voice-guided resume screenshot](docs/img/screenshot.png)
+
 Ships as a fully static site from `dist/` (GitHub Pages).
 
 ## Features
