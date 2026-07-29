@@ -7,7 +7,6 @@ import * as state from './state.js';
 import { renderResume } from './renderer.js';
 import { initEffectsModule, testEffects } from './effects-ui.js';
 import { initSpeechModule } from './speech.js';
-import { initParallaxModule } from './parallax.js';
 import { initRemoteTtsModule, loadCachedRemoteVoices, updateServerStatusUI, updateVoiceUploadUI, speakWithRemoteTTS, warmVoiceCache, connectToRemoteTTS, uploadVoice, fetchRemoteVoices } from './remote-tts.js';
 import { initRobotUI } from './robot-ui.js';
 
@@ -69,9 +68,6 @@ const initializeApp = async () => {
       console.error('[Static Mode] Failed to load manifest:', e);
     }
   }
-
-  // Initialize parallax effects
-  initParallaxModule();
 
   // Initialize effects HUD and chain
   initEffectsModule();

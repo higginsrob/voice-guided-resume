@@ -10,7 +10,6 @@ Ships as a fully static site from `dist/` (GitHub Pages).
 
 - **Narrated resume** — first-person (Rob) and third-person (reference) voice clones, not verbatim line reading
 - **Click or spacebar** — start continuous playback, jump from any line, play/pause
-- **Parallax UI** — scrolling background shapes and brightness that tracks the viewport center
 - **Audio effects HUD** — reverb, delay, distortion, chorus, phaser, compressor, filter, and 4-band EQ; drag to reorder the chain; save presets in `localStorage`
 - **Static TTS** — MP3s pre-baked at build time so no TTS server is required at runtime
 
@@ -34,7 +33,6 @@ src/
     speech.js           # Playback / dialogue selection
     remote-tts.js       # Live TTS or static MP3 playback
     effects-ui.js       # Effects HUD + presets
-    parallax.js
     robot-ui.js
     state.js
   img/
@@ -54,7 +52,7 @@ bun run build:app
 bun run dev
 ```
 
-`dev` serves `dist/` with `http-server`. Open the URL it prints (usually `http://localhost:8080`).
+`dev` serves `dist/` with Bun. Open `http://localhost:8080`.
 
 > Audio playback needs a user gesture (browser autoplay policy). Click the page or press space once.
 
